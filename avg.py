@@ -1,24 +1,37 @@
 import random
 
-NUM_NODES=5
+NUM_NODES = int(input("Enter the number of nodes: "))
 
-nodes = [random.randint(1, 100) for _ in range(NUM_NODES)]
-print("Initial node values:", nodes)
+# Take input from user for each node
+nodes = []
+for i in range(NUM_NODES):
+    val = float(input(f"Enter value for node {i + 1}: "))
+    nodes.append(val)
 
-ROUNDS=8
+print("\nInitial node values:", [int(x) if x.is_integer() else x for x in nodes])
+
+ROUNDS = 8
 
 for r in range(ROUNDS):
     print(f"\n--- Round {r + 1} ---")
 
-    random.shuffle(nodes)
+    # Shuffle indices instead of values
+    indices = list(range(NUM_NODES))
+    random.shuffle(indices)
 
-    for i in range(0, len(nodes) - 1, 2):
-        avg = (nodes[i] + nodes[i + 1]) / 2
-        nodes[i] = avg
-        nodes[i + 1] = avg
-        print(f"Node {i} and Node {i+1} exchanged values -> New value: {avg}")
+    # Process in pairs using shuffled indices
+    for i in range(0, NUM_NODES - 1, 2):
+        idx1 = indices[i]
+        idx2 = indices[i + 1]
+
+        avg = (nodes[idx1] + nodes[idx2]) / 2
+        nodes[idx1] = avg
+        nodes[idx2] = avg
+
+        print(f"Node {idx1} and Node {idx2} exchanged values -> New value: {round(avg, 2)}")
+
     print("Current values:", [round(x, 2) for x in nodes])
-    # print("nodes " , *nodes)
 
+# Final average
 final_avg = sum(nodes) / len(nodes)
 print("\nFinal approximate global average at all nodes:", round(final_avg, 2))
