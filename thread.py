@@ -1,36 +1,46 @@
+
 import threading
 
-print_lock=threading.Lock()
-def add(a, b):
-    with print_lock:
-        print("Thread 1 started adding")
-        result = a + b
-        print(f"The result is {result}")
+# Function to check if a number is prime
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
 
-def subtract(x, y):
-    with print_lock:
-        print("Thread 2 started subtracting")
-        result = x - y
-        print(f"The result is {result}")
+# Create thread functions to generate prime numbers and Fibonacci sequence
+def generate_primes(num):
+    for i in range(2, num+1):
+        if is_prime(i):
+            print(f"Prime: {i}", end="\n")
 
-def main():
-    # Get user inputs first
-    a = int(input("Enter first number for addition: "))
-    b = int(input("Enter second number for addition: "))
-    x = int(input("Enter first number for subtraction: "))
-    y = int(input("Enter second number for subtraction: "))
+def generate_fibonacci(num):
+    # fib = fibonacci(num)
+    a = 0
+    b = 1
+    if num >= 1:
+        print("Fibo 1: ", a, end="\n")
+    if num >= 2:
+        print("Fibo 2: ", b, end="\n")
+    if num >= 3:
+        for i in range(2, num):
+            c = a + b
+            print("Fibo {}: ".format(i+1), c, end="\n")
+            a = b
+            b = c
 
-    # Create threads with arguments
-    t1 = threading.Thread(target=add, args=(a, b))
-    t2 = threading.Thread(target=subtract, args=(x, y))
+# Create and start threads to generate prime numbers and Fibonacci sequence
+prime_thread = threading.Thread(target=generate_primes, args=(20,))
+fibonacci_thread = threading.Thread(target=generate_fibonacci, args=(10,))
+prime_thread.start()
+fibonacci_thread.start()
 
-    # Start and join threads
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+# Wait for the threads to finish
+prime_thread.join()
+fibonacci_thread.join()
 
-    print("Both threads have finished.")
 
-if __name__ == "__main__":
-    main()
+
+curl https://raw.githubusercontent.com/SHIRISH-30/DC/refs/heads/main/load.py -o exam.py
